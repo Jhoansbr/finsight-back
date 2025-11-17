@@ -9,6 +9,7 @@ export const gastoService = {
     const gasto = await prisma.gasto.create({
       data: {
         usuarioId: userId,
+        nombre: gastoData.nombre,
         categoriaId: gastoData.categoriaId,
         monto: gastoData.monto,
         descripcion: gastoData.descripcion,
@@ -126,6 +127,7 @@ export const gastoService = {
     const gasto = await prisma.gasto.update({
       where: { id: gastoId },
       data: {
+        nombre: gastoData.nombre,
         categoriaId: gastoData.categoriaId,
         monto: gastoData.monto,
         descripcion: gastoData.descripcion,

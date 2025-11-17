@@ -9,6 +9,7 @@ export const ingresoService = {
     const ingreso = await prisma.ingreso.create({
       data: {
         usuarioId: userId,
+        nombre: ingresoData.nombre,
         categoriaId: ingresoData.categoriaId,
         monto: ingresoData.monto,
         descripcion: ingresoData.descripcion,
@@ -126,6 +127,7 @@ export const ingresoService = {
     const ingreso = await prisma.ingreso.update({
       where: { id: ingresoId },
       data: {
+        nombre: ingresoData.nombre,
         categoriaId: ingresoData.categoriaId,
         monto: ingresoData.monto,
         descripcion: ingresoData.descripcion,
