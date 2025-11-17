@@ -1,6 +1,13 @@
 import { body, query } from 'express-validator';
 
 export const createGastoValidator = [
+  body('nombre')
+    .trim()
+    .notEmpty()
+    .withMessage('El nombre es requerido')
+    .isLength({ max: 200 })
+    .withMessage('El nombre no debe exceder 200 caracteres'),
+  
   body('categoriaId')
     .isInt({ min: 1 })
     .withMessage('ID de categoría inválido'),
