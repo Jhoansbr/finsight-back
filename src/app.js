@@ -11,6 +11,9 @@ import logger from './config/logger.js';
 
 const app = express();
 
+// Trust proxy - Necesario para Render y rate limiting
+app.set('trust proxy', 1);
+
 // Security middleware
 app.use(helmet());
 
