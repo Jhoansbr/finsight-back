@@ -20,23 +20,24 @@ export const registerValidator = [
     .isLength({ max: 100 })
     .withMessage('El nombre no debe exceder 100 caracteres'),
   
-  body('apellido')
-    .trim()
-    .notEmpty()
-    .withMessage('El apellido es requerido')
-    .isLength({ max: 100 })
-    .withMessage('El apellido no debe exceder 100 caracteres'),
-  
-  body('fechaNacimiento')
+  body('apodo')
     .optional()
-    .isISO8601()
-    .withMessage('Fecha de nacimiento inválida')
-    .toDate(),
+    .trim()
+    .isLength({ max: 100 })
+    .withMessage('El apodo no debe exceder 100 caracteres'),
   
-  body('telefono')
+  body('telegram')
+    .optional()
+    .trim()
+    .isLength({ max: 100 })
+    .withMessage('El telegram no debe exceder 100 caracteres'),
+  
+  body('whatsapp')
     .optional()
     .matches(/^[+]?[\d\s-()]+$/)
-    .withMessage('Teléfono inválido'),
+    .withMessage('WhatsApp inválido')
+    .isLength({ max: 20 })
+    .withMessage('WhatsApp no debe exceder 20 caracteres'),
 ];
 
 export const loginValidator = [

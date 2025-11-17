@@ -20,35 +20,52 @@ export const authService = {
     // Hash de la contraseña
     const passwordHash = await hashPassword(userData.password);
 
-    // Crear usuario
-    const user = await prisma.usuario.create({
-      data: {
-        email: userData.email,
-        passwordHash,
-        nombre: userData.nombre,
-        apellido: userData.apellido,
-        fechaNacimiento: userData.fechaNacimiento || null,
-        telefono: userData.telefono || null,
-      },
-      select: {
-        id: true,
-        email: true,
-        nombre: true,
-        apellido: true,
-        fechaNacimiento: true,
-        telefono: true,
-        moneda: true,
-        zonaHoraria: true,
-        idioma: true,
-        createdAt: true,
-      },
+    // Crear usuario y preferencias en una transacción
+    const result = await prisma.$transaction(async (tx) => {
+      // Crear usuario
+      const user = await tx.usuario.create({
+        data: {
+          email: userData.email,
+          passwordHash,
+          nombre: userData.nombre,
+          apodo: userData.apodo || null,
+          telegram: userData.telegram || null,
+          whatsapp: userData.whatsapp || null,
+        },
+        select: {
+          id: true,
+          email: true,
+          nombre: true,
+          apodo: true,
+          telegram: true,
+          whatsapp: true,
+          fotoPerfil: true,
+          fechaRegistro: true,
+          createdAt: true,
+        },
+      });
+
+      // Crear preferencias por defecto
+      await tx.preferenciaUsuario.create({
+        data: {
+          usuarioId: user.id,
+          moneda: 'COP',
+          pais: 'Colombia',
+          zonaHoraria: 'America/Bogota',
+          idioma: 'es',
+          notificacionesEmail: true,
+          notificacionesPush: true,
+        },
+      });
+
+      return user;
     });
 
     // Generar tokens
-    const tokens = generateTokens(user);
+    const tokens = generateTokens(result);
 
     return {
-      user,
+      user: result,
       ...tokens,
     };
   },
@@ -122,16 +139,24 @@ export const authService = {
         id: true,
         email: true,
         nombre: true,
-        apellido: true,
-        fechaNacimiento: true,
-        telefono: true,
-        moneda: true,
-        zonaHoraria: true,
-        idioma: true,
-        notificacionesEmail: true,
-        notificacionesPush: true,
+        apodo: true,
+        telegram: true,
+        whatsapp: true,
+        fotoPerfil: true,
+        fechaRegistro: true,
+        fechaUltimaSesion: true,
         createdAt: true,
         updatedAt: true,
+        preferencia: {
+          select: {
+            moneda: true,
+            pais: true,
+            zonaHoraria: true,
+            idioma: true,
+            notificacionesEmail: true,
+            notificacionesPush: true,
+          },
+        },
       },
     });
 

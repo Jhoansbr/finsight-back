@@ -11,42 +11,40 @@ datasource db {
 }
 
 model Usuario {
-  id                  Int       @id @default(autoincrement())
-  email               String    @unique @db.VarChar(255)
-  passwordHash        String    @map("password_hash") @db.VarChar(255)
-  nombre              String    @db.VarChar(100)
-  apellido            String    @db.VarChar(100)
-  fechaNacimiento     DateTime? @map("fecha_nacimiento") @db.Date
-  telefono            String?   @db.VarChar(20)
-  moneda              String    @default("COP") @db.VarChar(3)
-  zonaHoraria         String    @default("America/Bogota") @map("zona_horaria") @db.VarChar(50)
-  idioma              String    @default("es") @db.VarChar(5)
-  notificacionesEmail Boolean   @default(true) @map("notificaciones_email")
-  notificacionesPush  Boolean   @default(true) @map("notificaciones_push")
-  activo              Boolean   @default(true)
-  createdAt           DateTime  @default(now()) @map("created_at") @db.Timestamp(6)
-  updatedAt           DateTime  @updatedAt @map("updated_at") @db.Timestamp(6)
+  id                Int       @id @default(autoincrement()) @map("id_usuario")
+  email             String    @unique @db.VarChar(255)
+  passwordHash      String    @map("password_hash") @db.VarChar(255)
+  nombre            String    @db.VarChar(100)
+  apodo             String?   @db.VarChar(100)
+  fotoPerfil        String?   @map("foto_perfil") @db.Text
+  telegram          String?   @db.VarChar(100)
+  whatsapp          String?   @db.VarChar(20)
+  fechaRegistro     DateTime  @default(now()) @map("fecha_registro") @db.Timestamp(6)
+  fechaUltimaSesion DateTime? @map("fecha_ultima_sesion") @db.Timestamp(6)
+  activo            Boolean   @default(true)
+  createdAt         DateTime  @default(now()) @map("created_at") @db.Timestamp(6)
+  updatedAt         DateTime  @updatedAt @map("updated_at") @db.Timestamp(6)
 
   ingresos              Ingreso[]
   gastos                Gasto[]
   metasAhorros          MetaAhorro[]
+  ahorros               Ahorro[]
   presupuestos          Presupuesto[]
+  preferencia           PreferenciaUsuario?
+  estadisticas          Estadistica[]
   recordatorios         Recordatorio[]
   predicciones          Prediccion[]
   reportes              Reporte[]
-  estadisticas          Estadistica[]
   plantillasReportes    PlantillaReporte[]
 
   @@map("usuarios")
 }
 
 model Categoria {
-  id          Int      @id @default(autoincrement())
-  nombre      String   @db.VarChar(100)
-  tipo        String   @db.VarChar(10) // 'ingreso' o 'gasto'
-  icono       String?  @db.VarChar(50)
-  color       String?  @db.VarChar(7)
+  id          Int      @id @default(autoincrement()) @map("id_categoria")
+  nombre      String   @unique @db.VarChar(100)
   descripcion String?  @db.Text
+  icono       String?  @db.VarChar(50)
   activo      Boolean  @default(true)
   createdAt   DateTime @default(now()) @map("created_at") @db.Timestamp(6)
 
@@ -58,7 +56,7 @@ model Categoria {
 }
 
 model TipoPago {
-  id          Int      @id @default(autoincrement())
+  id          Int      @id @default(autoincrement()) @map("id_tipo_pago")
   nombre      String   @unique @db.VarChar(50)
   descripcion String?  @db.Text
   activo      Boolean  @default(true)
@@ -66,17 +64,18 @@ model TipoPago {
 
   ingresos Ingreso[]
   gastos   Gasto[]
+  ahorros  Ahorro[]
 
   @@map("tipos_pago")
 }
 
 model Frecuencia {
-  id          Int      @id @default(autoincrement())
-  nombre      String   @unique @db.VarChar(50)
-  dias        Int? // número de días de la frecuencia
-  descripcion String?  @db.Text
-  activo      Boolean  @default(true)
-  createdAt   DateTime @default(now()) @map("created_at") @db.Timestamp(6)
+  id             Int      @id @default(autoincrement()) @map("id_frecuencia")
+  nombre         String   @unique @db.VarChar(50)
+  descripcion    String?  @db.Text
+  diasIntervalo  Int?     @map("dias_intervalo")
+  activo         Boolean  @default(true)
+  createdAt      DateTime @default(now()) @map("created_at") @db.Timestamp(6)
 
   ingresos Ingreso[]
   gastos   Gasto[]
@@ -85,25 +84,26 @@ model Frecuencia {
 }
 
 model Ingreso {
-  id            Int       @id @default(autoincrement())
-  usuarioId     Int       @map("usuario_id")
-  categoriaId   Int       @map("categoria_id")
-  monto         Decimal   @db.Decimal(15, 2)
-  descripcion   String?   @db.Text
-  fecha         DateTime  @db.Date
-  tipoPagoId    Int?      @map("tipo_pago_id")
-  esRecurrente  Boolean   @default(false) @map("es_recurrente")
-  frecuenciaId  Int?      @map("frecuencia_id")
-  fechaInicio   DateTime? @map("fecha_inicio") @db.Date
-  fechaFin      DateTime? @map("fecha_fin") @db.Date
-  activo        Boolean   @default(true)
-  createdAt     DateTime  @default(now()) @map("created_at") @db.Timestamp(6)
-  updatedAt     DateTime  @updatedAt @map("updated_at") @db.Timestamp(6)
+  id                    Int         @id @default(autoincrement()) @map("id_ingreso")
+  usuarioId             Int         @map("id_usuario")
+  categoriaId           Int?        @map("id_categoria")
+  tipoPagoId            Int?        @map("id_tipo_pago")
+  frecuenciaId          Int?        @map("id_frecuencia")
+  metaAhorroAsociadoId  Int?        @map("id_meta_ahorro_asociado")
+  nombre                String      @db.VarChar(200)
+  monto                 Decimal     @db.Decimal(15, 2)
+  fecha                 DateTime    @db.Date
+  descripcion           String?     @db.Text
+  esRecurrente          Boolean     @default(false) @map("es_recurrente")
+  activo                Boolean     @default(true)
+  createdAt             DateTime    @default(now()) @map("created_at") @db.Timestamp(6)
+  updatedAt             DateTime    @updatedAt @map("updated_at") @db.Timestamp(6)
 
-  usuario    Usuario     @relation(fields: [usuarioId], references: [id], onDelete: Cascade)
-  categoria  Categoria   @relation(fields: [categoriaId], references: [id])
-  tipoPago   TipoPago?   @relation(fields: [tipoPagoId], references: [id])
-  frecuencia Frecuencia? @relation(fields: [frecuenciaId], references: [id])
+  usuario            Usuario     @relation(fields: [usuarioId], references: [id], onDelete: Cascade)
+  categoria          Categoria?  @relation(fields: [categoriaId], references: [id], onDelete: SetNull)
+  tipoPago           TipoPago?   @relation(fields: [tipoPagoId], references: [id], onDelete: SetNull)
+  frecuencia         Frecuencia? @relation(fields: [frecuenciaId], references: [id], onDelete: SetNull)
+  metaAhorroAsociado MetaAhorro? @relation(fields: [metaAhorroAsociadoId], references: [id], onDelete: SetNull)
 
   @@index([usuarioId])
   @@index([categoriaId])
@@ -112,25 +112,26 @@ model Ingreso {
 }
 
 model Gasto {
-  id            Int       @id @default(autoincrement())
-  usuarioId     Int       @map("usuario_id")
-  categoriaId   Int       @map("categoria_id")
-  monto         Decimal   @db.Decimal(15, 2)
-  descripcion   String?   @db.Text
-  fecha         DateTime  @db.Date
-  tipoPagoId    Int?      @map("tipo_pago_id")
-  esRecurrente  Boolean   @default(false) @map("es_recurrente")
-  frecuenciaId  Int?      @map("frecuencia_id")
-  fechaInicio   DateTime? @map("fecha_inicio") @db.Date
-  fechaFin      DateTime? @map("fecha_fin") @db.Date
-  activo        Boolean   @default(true)
-  createdAt     DateTime  @default(now()) @map("created_at") @db.Timestamp(6)
-  updatedAt     DateTime  @updatedAt @map("updated_at") @db.Timestamp(6)
+  id                    Int         @id @default(autoincrement()) @map("id_gasto")
+  usuarioId             Int         @map("id_usuario")
+  categoriaId           Int?        @map("id_categoria")
+  tipoPagoId            Int?        @map("id_tipo_pago")
+  frecuenciaId          Int?        @map("id_frecuencia")
+  metaAhorroAsociadoId  Int?        @map("id_meta_ahorro_asociado")
+  nombre                String      @db.VarChar(200)
+  monto                 Decimal     @db.Decimal(15, 2)
+  fecha                 DateTime    @db.Date
+  descripcion           String?     @db.Text
+  esRecurrente          Boolean     @default(false) @map("es_recurrente")
+  activo                Boolean     @default(true)
+  createdAt             DateTime    @default(now()) @map("created_at") @db.Timestamp(6)
+  updatedAt             DateTime    @updatedAt @map("updated_at") @db.Timestamp(6)
 
-  usuario    Usuario     @relation(fields: [usuarioId], references: [id], onDelete: Cascade)
-  categoria  Categoria   @relation(fields: [categoriaId], references: [id])
-  tipoPago   TipoPago?   @relation(fields: [tipoPagoId], references: [id])
-  frecuencia Frecuencia? @relation(fields: [frecuenciaId], references: [id])
+  usuario            Usuario     @relation(fields: [usuarioId], references: [id], onDelete: Cascade)
+  categoria          Categoria?  @relation(fields: [categoriaId], references: [id], onDelete: SetNull)
+  tipoPago           TipoPago?   @relation(fields: [tipoPagoId], references: [id], onDelete: SetNull)
+  frecuencia         Frecuencia? @relation(fields: [frecuenciaId], references: [id], onDelete: SetNull)
+  metaAhorroAsociado MetaAhorro? @relation(fields: [metaAhorroAsociadoId], references: [id], onDelete: SetNull)
 
   @@index([usuarioId])
   @@index([categoriaId])
@@ -139,167 +140,229 @@ model Gasto {
 }
 
 model MetaAhorro {
-  id               Int       @id @default(autoincrement())
-  usuarioId        Int       @map("usuario_id")
-  nombre           String    @db.VarChar(200)
-  descripcion      String?   @db.Text
-  montoObjetivo    Decimal   @map("monto_objetivo") @db.Decimal(15, 2)
-  montoActual      Decimal   @default(0) @map("monto_actual") @db.Decimal(15, 2)
-  fechaInicio      DateTime  @map("fecha_inicio") @db.Date
-  fechaObjetivo    DateTime? @map("fecha_objetivo") @db.Date
-  estado           String    @default("en_progreso") @db.VarChar(20) // 'en_progreso', 'completada', 'cancelada'
-  prioridad        String?   @db.VarChar(10) // 'baja', 'media', 'alta'
-  icono            String?   @db.VarChar(50)
-  activo           Boolean   @default(true)
-  createdAt        DateTime  @default(now()) @map("created_at") @db.Timestamp(6)
-  updatedAt        DateTime  @updatedAt @map("updated_at") @db.Timestamp(6)
+  id             Int       @id @default(autoincrement()) @map("id_meta_ahorro")
+  usuarioId      Int       @map("id_usuario")
+  nombre         String    @db.VarChar(200)
+  descripcion    String?   @db.Text
+  montoObjetivo  Decimal?  @map("monto_objetivo") @db.Decimal(15, 2)
+  montoActual    Decimal   @default(0) @map("monto_actual") @db.Decimal(15, 2)
+  fechaInicio    DateTime? @map("fecha_inicio") @db.Date
+  fechaObjetivo  DateTime? @map("fecha_objetivo") @db.Date
+  activo         Boolean   @default(true)
+  createdAt      DateTime  @default(now()) @map("created_at") @db.Timestamp(6)
+  updatedAt      DateTime  @updatedAt @map("updated_at") @db.Timestamp(6)
 
-  usuario  Usuario   @relation(fields: [usuarioId], references: [id], onDelete: Cascade)
-  ahorros  Ahorro[]
+  usuario             Usuario   @relation(fields: [usuarioId], references: [id], onDelete: Cascade)
+  ahorros             Ahorro[]
+  ingresosAsociados   Ingreso[]
+  gastosAsociados     Gasto[]
 
   @@index([usuarioId])
   @@map("metas_ahorros")
 }
 
 model Ahorro {
-  id           Int      @id @default(autoincrement())
-  metaId       Int      @map("meta_id")
-  tipoMovimiento String @map("tipo_movimiento") @db.VarChar(10) // 'deposito' o 'retiro'
-  monto        Decimal  @db.Decimal(15, 2)
-  descripcion  String?  @db.Text
-  fecha        DateTime @default(now()) @db.Timestamp(6)
-  createdAt    DateTime @default(now()) @map("created_at") @db.Timestamp(6)
+  id              Int      @id @default(autoincrement()) @map("id_ahorro")
+  metaAhorroId    Int      @map("id_meta_ahorro")
+  usuarioId       Int      @map("id_usuario")
+  tipoPagoId      Int?     @map("id_tipo_pago")
+  nombre          String   @db.VarChar(200)
+  monto           Decimal  @db.Decimal(15, 2)
+  fecha           DateTime @db.Date
+  tipoMovimiento  String   @map("tipo_movimiento") @db.VarChar(20)
+  descripcion     String?  @db.Text
+  createdAt       DateTime @default(now()) @map("created_at") @db.Timestamp(6)
 
-  meta MetaAhorro @relation(fields: [metaId], references: [id], onDelete: Cascade)
+  metaAhorro MetaAhorro @relation(fields: [metaAhorroId], references: [id], onDelete: Cascade)
+  usuario    Usuario    @relation(fields: [usuarioId], references: [id], onDelete: Cascade)
+  tipoPago   TipoPago?  @relation(fields: [tipoPagoId], references: [id], onDelete: SetNull)
 
-  @@index([metaId])
+  @@index([usuarioId])
+  @@index([metaAhorroId])
+  @@index([fecha])
   @@map("ahorros")
 }
 
+model PreferenciaUsuario {
+  id                  Int      @id @default(autoincrement()) @map("id_preferencia")
+  usuarioId           Int      @unique @map("id_usuario")
+  moneda              String   @default("COP") @db.VarChar(10)
+  pais                String?  @db.VarChar(100)
+  zonaHoraria         String   @default("America/Bogota") @map("zona_horaria") @db.VarChar(50)
+  idioma              String   @default("es") @db.VarChar(10)
+  notificacionesEmail Boolean  @default(true) @map("notificaciones_email")
+  notificacionesPush  Boolean  @default(true) @map("notificaciones_push")
+  createdAt           DateTime @default(now()) @map("created_at") @db.Timestamp(6)
+  updatedAt           DateTime @updatedAt @map("updated_at") @db.Timestamp(6)
+
+  usuario Usuario @relation(fields: [usuarioId], references: [id], onDelete: Cascade)
+
+  @@map("preferencias_usuario")
+}
+
 model Presupuesto {
-  id              Int       @id @default(autoincrement())
-  usuarioId       Int       @map("usuario_id")
-  nombre          String    @db.VarChar(200)
-  mes             Int
-  anio            Int
-  montoTotal      Decimal   @map("monto_total") @db.Decimal(15, 2)
-  descripcion     String?   @db.Text
-  activo          Boolean   @default(true)
-  createdAt       DateTime  @default(now()) @map("created_at") @db.Timestamp(6)
-  updatedAt       DateTime  @updatedAt @map("updated_at") @db.Timestamp(6)
+  id         Int      @id @default(autoincrement()) @map("id_presupuesto")
+  usuarioId  Int      @map("id_usuario")
+  anio       Int
+  mes        Int
+  montoTotal Decimal  @default(0) @map("monto_total") @db.Decimal(15, 2)
+  activo     Boolean  @default(true)
+  createdAt  DateTime @default(now()) @map("created_at") @db.Timestamp(6)
+  updatedAt  DateTime @updatedAt @map("updated_at") @db.Timestamp(6)
 
-  usuario     Usuario                @relation(fields: [usuarioId], references: [id], onDelete: Cascade)
-  categorias  PresupuestoCategoria[]
+  usuario    Usuario                @relation(fields: [usuarioId], references: [id], onDelete: Cascade)
+  categorias PresupuestoCategoria[]
 
-  @@unique([usuarioId, mes, anio])
+  @@unique([usuarioId, anio, mes])
   @@index([usuarioId])
   @@map("presupuestos")
 }
 
 model PresupuestoCategoria {
-  id              Int      @id @default(autoincrement())
-  presupuestoId   Int      @map("presupuesto_id")
-  categoriaId     Int      @map("categoria_id")
+  id              Int      @id @default(autoincrement()) @map("id_presupuesto_categoria")
+  presupuestoId   Int      @map("id_presupuesto")
+  categoriaId     Int      @map("id_categoria")
   montoAsignado   Decimal  @map("monto_asignado") @db.Decimal(15, 2)
   montoGastado    Decimal  @default(0) @map("monto_gastado") @db.Decimal(15, 2)
   createdAt       DateTime @default(now()) @map("created_at") @db.Timestamp(6)
   updatedAt       DateTime @updatedAt @map("updated_at") @db.Timestamp(6)
 
   presupuesto Presupuesto @relation(fields: [presupuestoId], references: [id], onDelete: Cascade)
-  categoria   Categoria   @relation(fields: [categoriaId], references: [id])
+  categoria   Categoria   @relation(fields: [categoriaId], references: [id], onDelete: Cascade)
 
   @@unique([presupuestoId, categoriaId])
   @@index([presupuestoId])
+  @@index([categoriaId])
   @@map("presupuesto_categorias")
 }
 
 model Estadistica {
-  id         Int      @id @default(autoincrement())
-  usuarioId  Int      @map("usuario_id")
-  tipo       String   @db.VarChar(50) // 'mensual', 'anual', 'categoria', etc.
-  periodo    String   @db.VarChar(20) // 'YYYY-MM' o 'YYYY'
-  datos      Json     @db.JsonB
-  createdAt  DateTime @default(now()) @map("created_at") @db.Timestamp(6)
-  updatedAt  DateTime @updatedAt @map("updated_at") @db.Timestamp(6)
+  id               Int       @id @default(autoincrement()) @map("id_estadistica")
+  usuarioId        Int       @map("id_usuario")
+  tipoEstadistica  String    @map("tipo_estadistica") @db.VarChar(50)
+  periodoInicio    DateTime? @map("periodo_inicio") @db.Date
+  periodoFin       DateTime? @map("periodo_fin") @db.Date
+  datos            Json?     @db.JsonB
+  fechaCalculo     DateTime  @default(now()) @map("fecha_calculo") @db.Timestamp(6)
+  activo           Boolean   @default(true)
+  createdAt        DateTime  @default(now()) @map("created_at") @db.Timestamp(6)
+  updatedAt        DateTime  @updatedAt @map("updated_at") @db.Timestamp(6)
 
   usuario Usuario @relation(fields: [usuarioId], references: [id], onDelete: Cascade)
 
-  @@unique([usuarioId, tipo, periodo])
   @@index([usuarioId])
+  @@index([tipoEstadistica])
   @@map("estadisticas")
 }
 
 model Recordatorio {
-  id          Int       @id @default(autoincrement())
-  usuarioId   Int       @map("usuario_id")
-  titulo      String    @db.VarChar(200)
-  descripcion String?   @db.Text
-  fecha       DateTime  @db.Timestamp(6)
-  tipo        String    @db.VarChar(50) // 'pago', 'meta', 'presupuesto', 'personalizado'
-  completado  Boolean   @default(false)
-  activo      Boolean   @default(true)
-  createdAt   DateTime  @default(now()) @map("created_at") @db.Timestamp(6)
-  updatedAt   DateTime  @updatedAt @map("updated_at") @db.Timestamp(6)
+  id                    Int       @id @default(autoincrement()) @map("id_recordatorio")
+  usuarioId             Int       @map("id_usuario")
+  ingresoId             Int?      @map("id_ingreso")
+  gastoId               Int?      @map("id_gasto")
+  metaAhorroId          Int?      @map("id_meta_ahorro")
+  tipoRecordatorio      String    @map("tipo_recordatorio") @db.VarChar(50)
+  titulo                String    @db.VarChar(200)
+  descripcion           String?   @db.Text
+  fechaRecordatorio     DateTime  @map("fecha_recordatorio") @db.Timestamp(6)
+  fechaVencimiento      DateTime? @map("fecha_vencimiento") @db.Date
+  frecuenciaRepeticion  String?   @map("frecuencia_repeticion") @db.VarChar(50)
+  estado                String    @default("pendiente") @db.VarChar(20)
+  metodoNotificacion    String    @default("push") @map("metodo_notificacion") @db.VarChar(50)
+  notificado            Boolean   @default(false)
+  activo                Boolean   @default(true)
+  createdAt             DateTime  @default(now()) @map("created_at") @db.Timestamp(6)
+  updatedAt             DateTime  @updatedAt @map("updated_at") @db.Timestamp(6)
 
   usuario Usuario @relation(fields: [usuarioId], references: [id], onDelete: Cascade)
 
   @@index([usuarioId])
-  @@index([fecha])
+  @@index([fechaRecordatorio])
+  @@index([estado])
   @@map("recordatorios")
 }
 
 model Prediccion {
-  id              Int      @id @default(autoincrement())
-  usuarioId       Int      @map("usuario_id")
-  tipo            String   @db.VarChar(50) // 'ingreso', 'gasto', 'balance'
-  periodoInicio   DateTime @map("periodo_inicio") @db.Date
-  periodoFin      DateTime @map("periodo_fin") @db.Date
-  valorPredicho   Decimal  @map("valor_predicho") @db.Decimal(15, 2)
-  valorReal       Decimal? @map("valor_real") @db.Decimal(15, 2)
-  precision       Decimal? @db.Decimal(5, 2)
-  metricasModelo  Json?    @map("metricas_modelo") @db.JsonB
-  modeloUsado     String?  @map("modelo_usado") @db.VarChar(100)
-  confianza       Decimal? @db.Decimal(5, 2)
-  createdAt       DateTime @default(now()) @map("created_at") @db.Timestamp(6)
+  id                      Int       @id @default(autoincrement()) @map("id_prediccion")
+  usuarioId               Int       @map("id_usuario")
+  tipoPrediccion          String    @map("tipo_prediccion") @db.VarChar(50)
+  modeloUsado             String?   @map("modelo_usado") @db.VarChar(100)
+  periodoPrediccionInicio DateTime  @map("periodo_prediccion_inicio") @db.Date
+  periodoPrediccionFin    DateTime  @map("periodo_prediccion_fin") @db.Date
+  valorPredicho           Decimal?  @map("valor_predicho") @db.Decimal(15, 2)
+  valorReal               Decimal?  @map("valor_real") @db.Decimal(15, 2)
+  confianza               Decimal?  @db.Decimal(5, 2)
+  factoresConsiderados    Json?     @map("factores_considerados") @db.JsonB
+  fechaPrediccion         DateTime  @default(now()) @map("fecha_prediccion") @db.Timestamp(6)
+  fechaConfirmacion       DateTime? @map("fecha_confirmacion") @db.Timestamp(6)
+  precisionAjuste         Decimal?  @map("precision_ajuste") @db.Decimal(5, 2)
+  activo                  Boolean   @default(true)
+  createdAt               DateTime  @default(now()) @map("created_at") @db.Timestamp(6)
+  updatedAt               DateTime  @updatedAt @map("updated_at") @db.Timestamp(6)
 
   usuario Usuario @relation(fields: [usuarioId], references: [id], onDelete: Cascade)
 
   @@index([usuarioId])
+  @@index([tipoPrediccion])
   @@map("predicciones")
 }
 
+model MetricaModelo {
+  id                      Int       @id @default(autoincrement()) @map("id_metrica")
+  modelo                  String    @db.VarChar(100)
+  tipoPrediccion          String    @map("tipo_prediccion") @db.VarChar(50)
+  precisionPromedio       Decimal?  @map("precision_promedio") @db.Decimal(5, 2)
+  datosEntrenamiento      Json?     @map("datos_entrenamiento") @db.JsonB
+  fechaEntrenamiento      DateTime? @map("fecha_entrenamiento") @db.Timestamp(6)
+  fechaUltimaEvaluacion   DateTime? @map("fecha_ultima_evaluacion") @db.Timestamp(6)
+  activo                  Boolean   @default(true)
+  createdAt               DateTime  @default(now()) @map("created_at") @db.Timestamp(6)
+
+  @@map("metricas_modelos")
+}
+
 model Reporte {
-  id           Int      @id @default(autoincrement())
-  usuarioId    Int      @map("usuario_id")
-  nombre       String   @db.VarChar(200)
-  tipo         String   @db.VarChar(50) // 'mensual', 'anual', 'personalizado'
-  formato      String   @db.VarChar(10) // 'pdf', 'excel', 'csv'
-  periodoInicio DateTime @map("periodo_inicio") @db.Date
-  periodoFin   DateTime @map("periodo_fin") @db.Date
-  rutaArchivo  String?  @map("ruta_archivo") @db.VarChar(500)
-  parametros   Json?    @db.JsonB
-  generadoEn   DateTime @default(now()) @map("generado_en") @db.Timestamp(6)
+  id                     Int       @id @default(autoincrement()) @map("id_reporte")
+  usuarioId              Int       @map("id_usuario")
+  tipoReporte            String    @map("tipo_reporte") @db.VarChar(50)
+  nombreReporte          String    @map("nombre_reporte") @db.VarChar(200)
+  descripcion            String?   @db.Text
+  parametros             Json?     @db.JsonB
+  periodoInicio          DateTime? @map("periodo_inicio") @db.Date
+  periodoFin             DateTime? @map("periodo_fin") @db.Date
+  formato                String    @default("pdf") @db.VarChar(20)
+  rutaArchivo            String?   @map("ruta_archivo") @db.Text
+  urlArchivo             String?   @map("url_archivo") @db.Text
+  tamanoBytes            BigInt?   @map("tamano_bytes")
+  fechaGeneracion        DateTime  @default(now()) @map("fecha_generacion") @db.Timestamp(6)
+  fechaProgramada        DateTime? @map("fecha_programada") @db.Timestamp(6)
+  estado                 String    @default("completado") @db.VarChar(20)
+  programado             Boolean   @default(false)
+  frecuenciaProgramacion String?   @map("frecuencia_programacion") @db.VarChar(50)
+  activo                 Boolean   @default(true)
+  createdAt              DateTime  @default(now()) @map("created_at") @db.Timestamp(6)
+  updatedAt              DateTime  @updatedAt @map("updated_at") @db.Timestamp(6)
 
   usuario Usuario @relation(fields: [usuarioId], references: [id], onDelete: Cascade)
 
   @@index([usuarioId])
+  @@index([tipoReporte])
+  @@index([fechaGeneracion])
   @@map("reportes")
 }
 
 model PlantillaReporte {
-  id             Int      @id @default(autoincrement())
-  usuarioId      Int      @map("usuario_id")
-  nombre         String   @db.VarChar(200)
-  descripcion    String?  @db.Text
-  tipo           String   @db.VarChar(50)
-  configuracion  Json     @db.JsonB
-  activo         Boolean  @default(true)
-  createdAt      DateTime @default(now()) @map("created_at") @db.Timestamp(6)
-  updatedAt      DateTime @updatedAt @map("updated_at") @db.Timestamp(6)
+  id              Int      @id @default(autoincrement()) @map("id_plantilla")
+  usuarioId       Int?     @map("id_usuario")
+  nombrePlantilla String   @map("nombre_plantilla") @db.VarChar(200)
+  tipoReporte     String   @map("tipo_reporte") @db.VarChar(50)
+  configuracion   Json     @db.JsonB
+  activo          Boolean  @default(true)
+  createdAt       DateTime @default(now()) @map("created_at") @db.Timestamp(6)
+  updatedAt       DateTime @updatedAt @map("updated_at") @db.Timestamp(6)
 
-  usuario Usuario @relation(fields: [usuarioId], references: [id], onDelete: Cascade)
+  usuario Usuario? @relation(fields: [usuarioId], references: [id], onDelete: Cascade)
 
   @@index([usuarioId])
   @@map("plantillas_reportes")
 }
-

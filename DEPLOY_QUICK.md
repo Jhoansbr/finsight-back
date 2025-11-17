@@ -20,7 +20,7 @@ git add .
 git commit -m "Backend MIDAS listo para Render"
 git branch -M main
 # Crea un repo en GitHub, luego:
-git remote add origin https://github.com/TU_USUARIO/finsight-back.git
+git remote add origin https://github.com/Jhoansbr/finsight-back.git
 git push -u origin main
 ```
 

@@ -1,14 +1,63 @@
+# Dependencias
 node_modules
-npm-debug.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+package-lock.json
+yarn.lock
+
+# Variables de entorno
 .env
 .env.local
+.env.*.local
+.env.example
+
+# Git
 .git
 .gitignore
-README.md
-.vscode
-.idea
-coverage
+.gitattributes
+
+# Logs
 logs
 *.log
+
+# Testing
+coverage
+.nyc_output
+tests
+
+# IDEs
+.vscode
+.idea
+*.swp
+*.swo
+*~
 .DS_Store
+Thumbs.db
+
+# Documentación
+README.md
+*.md
+docs
+
+# Docker
+Dockerfile
+docker-compose.yml
+.dockerignore
+
+# Archivos temporales
+temp
+tmp
+*.tmp
+
+# Reportes y uploads (se crean en runtime)
+uploads
+reports
+
+# CI/CD
+.github
+.gitlab-ci.yml
+
+# Prisma migrations (solo en desarrollo)
+prisma/migrations/*_migration.sql
 
