@@ -1,0 +1,46 @@
+services:
+  - type: web
+    name: midas-backend
+    runtime: node
+    env: node
+    region: oregon
+    plan: free
+    buildCommand: npm install && npx prisma generate
+    startCommand: npm start
+    healthCheckPath: /health
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: API_VERSION
+        value: v1
+      - key: PORT
+        value: 3000
+      - key: DATABASE_URL
+        fromDatabase:
+          name: appfinanciera
+          property: connectionString
+      - key: JWT_SECRET
+        generateValue: true
+      - key: JWT_REFRESH_SECRET
+        generateValue: true
+      - key: JWT_EXPIRES_IN
+        value: 24h
+      - key: JWT_REFRESH_EXPIRES_IN
+        value: 7d
+      - key: CORS_ORIGIN
+        value: "*"
+      - key: RATE_LIMIT_WINDOW_MS
+        value: 900000
+      - key: RATE_LIMIT_MAX_REQUESTS
+        value: 100
+      - key: BCRYPT_SALT_ROUNDS
+        value: 10
+      - key: LOG_LEVEL
+        value: info
+      - key: DEFAULT_CURRENCY
+        value: COP
+      - key: DEFAULT_TIMEZONE
+        value: America/Bogota
+      - key: DEFAULT_LANGUAGE
+        value: es
+

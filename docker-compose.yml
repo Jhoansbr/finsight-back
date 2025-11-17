@@ -1,0 +1,48 @@
+version: '3.8'
+
+services:
+  # Base de datos PostgreSQL
+  postgres:
+    image: postgres:15-alpine
+    container_name: midas_postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: midas_user
+      POSTGRES_PASSWORD: midas_password
+      POSTGRES_DB: midas_db
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - midas_network
+
+  # Backend API
+  api:
+    build: .
+    container_name: midas_api
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
+    environment:
+      NODE_ENV: production
+      PORT: 3000
+      DATABASE_URL: postgresql://midas_user:midas_password@postgres:5432/midas_db?schema=public
+      JWT_SECRET: change_this_in_production
+      JWT_EXPIRES_IN: 24h
+      JWT_REFRESH_SECRET: change_this_in_production
+      JWT_REFRESH_EXPIRES_IN: 7d
+    depends_on:
+      - postgres
+    networks:
+      - midas_network
+    volumes:
+      - ./logs:/usr/src/app/logs
+
+volumes:
+  postgres_data:
+
+networks:
+  midas_network:
+    driver: bridge
+
