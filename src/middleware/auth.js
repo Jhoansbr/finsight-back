@@ -27,11 +27,8 @@ export const authenticate = async (req, res, next) => {
         id: true,
         email: true,
         nombre: true,
-        apellido: true,
+        apodo: true,
         activo: true,
-        moneda: true,
-        zonaHoraria: true,
-        idioma: true,
       },
     });
 
@@ -70,7 +67,7 @@ export const optionalAuth = async (req, res, next) => {
           id: true,
           email: true,
           nombre: true,
-          apellido: true,
+          apodo: true,
           activo: true,
         },
       });
