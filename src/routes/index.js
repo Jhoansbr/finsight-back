@@ -8,6 +8,7 @@ import metaAhorroRoutes from './metaAhorro.routes.js';
 import presupuestoRoutes from './presupuesto.routes.js';
 import recordatorioRoutes from './recordatorio.routes.js';
 import dashboardRoutes from './dashboard.routes.js';
+import testRoutes from './test.routes.js';
 
 const router = Router();
 
@@ -23,6 +24,7 @@ router.use('/presupuestos', presupuestoRoutes);
 router.use('/recordatorios', recordatorioRoutes);
 router.use('/dashboard', dashboardRoutes);
 router.use('/', dashboardRoutes); // Para /estadisticas
+router.use('/test', testRoutes); // Endpoints de prueba temporal
 
 // Ruta de health check
 router.get('/health', (req, res) => {

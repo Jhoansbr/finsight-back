@@ -9,6 +9,15 @@ import { Prisma } from '@prisma/client';
 export const errorHandler = (err, req, res, next) => {
   let error = err;
 
+  // Log del error original para debugging
+  logger.debug('Error original:', {
+    name: err.name,
+    message: err.message,
+    code: err.code,
+    details: err.details,
+    stack: err.stack
+  });
+
   // Si no es un AppError, convertirlo
   if (!(error instanceof AppError)) {
     // Errores de Prisma
@@ -17,14 +26,17 @@ export const errorHandler = (err, req, res, next) => {
     }
     // Errores de validación de Prisma
     else if (error instanceof Prisma.PrismaClientValidationError) {
-      error = new AppError('Error de validación de datos', 400, 'VALIDATION_ERROR');
+      error = new AppError('Error de validación de datos', 400, 'VALIDATION_ERROR', {
+        prismaError: error.message
+      });
     }
     // Otros errores
     else {
       error = new AppError(
         error.message || 'Error interno del servidor',
         error.statusCode || 500,
-        error.code || 'INTERNAL_ERROR'
+        error.code || 'INTERNAL_ERROR',
+        error.details || {}
       );
     }
   }
