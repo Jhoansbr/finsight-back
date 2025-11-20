@@ -37,7 +37,7 @@ export const categoriaService = {
   async getAllFrecuencias() {
     const frecuencias = await prisma.frecuencia.findMany({
       where: { activo: true },
-      orderBy: { dias: 'asc' },
+      orderBy: { diasIntervalo: 'asc' },
     });
 
     return frecuencias;
