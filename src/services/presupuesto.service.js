@@ -29,7 +29,20 @@ export const presupuestoService = {
         anio: presupuestoData.anio,
         montoTotal: presupuestoData.montoTotal,
         descripcion: presupuestoData.descripcion,
+        categorias: presupuestoData.categorias && presupuestoData.categorias.length > 0 ? {
+          create: presupuestoData.categorias.map(cat => ({
+            categoriaId: cat.categoriaId,
+            montoAsignado: cat.montoAsignado
+          }))
+        } : undefined
       },
+      include: {
+        categorias: {
+          include: {
+            categoria: true
+          }
+        }
+      }
     });
 
     return presupuesto;
@@ -40,7 +53,7 @@ export const presupuestoService = {
    */
   async getPresupuestos(userId, filters = {}) {
     const { page = 1, limit = 20, mes, anio } = filters;
-    
+
     const skip = (page - 1) * limit;
     const where = {
       usuarioId: userId,
@@ -278,7 +291,21 @@ export const presupuestoService = {
 
     // Calcular totales
     const totalAsignado = parseFloat(presupuesto.montoTotal);
-    const totalGastado = Object.values(gastosMap).reduce((sum, val) => sum + val, 0);
+
+    // Lógica condicional: Si tiene categorías asignadas, solo sumar gastos de esas categorías.
+    // Si NO tiene categorías, sumar TODOS los gastos del mes.
+    const tieneCategorias = presupuesto.categorias.length > 0;
+    let totalGastado = 0;
+
+    if (tieneCategorias) {
+      const idsCategorias = presupuesto.categorias.map(c => c.categoriaId);
+      totalGastado = Object.keys(gastosMap)
+        .filter(catId => idsCategorias.includes(parseInt(catId)))
+        .reduce((sum, catId) => sum + gastosMap[catId], 0);
+    } else {
+      totalGastado = Object.values(gastosMap).reduce((sum, val) => sum + val, 0);
+    }
+
     const totalRestante = totalAsignado - totalGastado;
     const porcentajeTotalUsado = totalAsignado > 0 ? (totalGastado / totalAsignado * 100).toFixed(2) : 0;
 
