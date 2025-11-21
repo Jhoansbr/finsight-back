@@ -24,11 +24,11 @@ export const presupuestoService = {
     const presupuesto = await prisma.presupuesto.create({
       data: {
         usuarioId: userId,
+        usuarioId: userId,
         nombre: presupuestoData.nombre,
         mes: presupuestoData.mes,
         anio: presupuestoData.anio,
         montoTotal: presupuestoData.montoTotal,
-        descripcion: presupuestoData.descripcion,
         categorias: presupuestoData.categorias && presupuestoData.categorias.length > 0 ? {
           create: presupuestoData.categorias.map(cat => ({
             categoriaId: cat.categoriaId,
@@ -145,7 +145,6 @@ export const presupuestoService = {
       data: {
         nombre: presupuestoData.nombre,
         montoTotal: presupuestoData.montoTotal,
-        descripcion: presupuestoData.descripcion,
       },
     });
 

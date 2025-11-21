@@ -5,8 +5,9 @@ export const createPresupuestoValidator = [
     .trim()
     .notEmpty()
     .withMessage('El nombre es requerido')
-    .isLength({ max: 200 })
-    .withMessage('El nombre no debe exceder 200 caracteres'),
+    .isLength({ max: 50 })
+    .withMessage('El nombre no debe exceder 50 caracteres'),
+
 
   body('mes')
     .isInt({ min: 1, max: 12 })
@@ -20,11 +21,7 @@ export const createPresupuestoValidator = [
     .isFloat({ min: 0.01 })
     .withMessage('El monto total debe ser un número positivo'),
 
-  body('descripcion')
-    .optional()
-    .trim()
-    .isLength({ max: 1000 })
-    .withMessage('La descripción no debe exceder 1000 caracteres'),
+
 
   body('categorias')
     .optional()
@@ -56,8 +53,9 @@ export const updatePresupuestoValidator = [
     .trim()
     .notEmpty()
     .withMessage('El nombre no puede estar vacío')
-    .isLength({ max: 200 })
-    .withMessage('El nombre no debe exceder 200 caracteres'),
+    .isLength({ max: 50 })
+    .withMessage('El nombre no debe exceder 50 caracteres'),
+
 
   body('montoTotal')
     .optional()

@@ -203,6 +203,7 @@ model PreferenciaUsuario {
 model Presupuesto {
   id         Int      @id @default(autoincrement()) @map("id_presupuesto")
   usuarioId  Int      @map("id_usuario")
+  nombre     String   @db.VarChar(50)
   anio       Int
   mes        Int
   montoTotal Decimal  @default(0) @map("monto_total") @db.Decimal(15, 2)
