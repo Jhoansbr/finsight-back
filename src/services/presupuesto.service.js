@@ -9,7 +9,7 @@ export const presupuestoService = {
     // Verificar que no exista ya un presupuesto para ese mes/año
     const existingPresupuesto = await prisma.presupuesto.findUnique({
       where: {
-        usuarioId_mes_anio: {
+        usuarioId_anio_mes: {
           usuarioId: userId,
           mes: presupuestoData.mes,
           anio: presupuestoData.anio,
