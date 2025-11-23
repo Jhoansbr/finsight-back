@@ -9,11 +9,11 @@ datasource db {
 }
 
 model UsuariosAnalisis {
-  idUsuario     Int       @id @map("id_usuario")
-  nombre        String    @db.VarChar(100)
-  email         String    @unique @db.VarChar(100)
-  fechaRegistro DateTime? @default(now()) @map("fecha_registro") @db.Timestamp(6)
-  activo        Boolean?  @default(true)
+  idUsuario Int       @id @map("id_usuario")
+  nombre    String?   @db.VarChar(100)
+  email     String?   @unique @db.VarChar(100)
+  active    Boolean?  @default(true)
+  createdAt DateTime? @default(now()) @map("created_at") @db.Timestamp(6)
 
   analisisDiarios AnalisisDiario[]
 
@@ -21,15 +21,12 @@ model UsuariosAnalisis {
 }
 
 model AnalisisDiario {
-  id            Int       @id @default(autoincrement())
-  idUsuario     Int       @map("id_usuario")
-  fecha         DateTime  @db.Date
-  estado        String?   @db.VarChar(20)
-  resultado     String?   @db.Text
-  creadoEn      DateTime? @default(now()) @map("creado_en") @db.Timestamp(6)
-  actualizadoEn DateTime? @default(now()) @map("actualizado_en") @db.Timestamp(6)
-  errores       String[]
-  aviso         String[]
+  id           Int       @id @default(autoincrement())
+  idUsuario    Int       @map("id_usuario")
+  fecha        DateTime? @db.Date
+  estado       String?   @db.VarChar(50)
+  errorDetalle String?   @map("error_detalle") @db.Text
+  createdAt    DateTime? @default(now()) @map("created_at") @db.Timestamp(6)
 
   usuario UsuariosAnalisis @relation(fields: [idUsuario], references: [idUsuario], onDelete: Cascade)
 
@@ -37,13 +34,15 @@ model AnalisisDiario {
 }
 
 model ResultadosAnalisis {
-  id              Int       @id @default(autoincrement())
-  idUsuario       Int       @map("id_usuario")
-  fecha           DateTime? @db.Date
-  sentimiento     String?   @db.VarChar(50)
-  resumen         String?   @db.Text
-  recomendaciones String?   @db.Text
-  generadoEn      DateTime? @default(now()) @map("generado_en") @db.Timestamp(6)
+  id                  Int       @id @default(autoincrement())
+  idUsuario           Int       @map("id_usuario")
+  fecha               DateTime? @db.Date
+  resumen             String?   @db.Text
+  insightAltoImpacto  String?   @map("insight_alto_impacto") @db.Text
+  insightMedioImpacto String?   @map("insight_medio_impacto") @db.Text
+  insightBajoImpacto  String?   @map("insight_bajo_impacto") @db.Text
+  datosJson           Json?     @map("datos_json") @db.JsonB
+  createdAt           DateTime? @default(now()) @map("created_at") @db.Timestamp(6)
 
   @@map("resultados_analisis")
 }

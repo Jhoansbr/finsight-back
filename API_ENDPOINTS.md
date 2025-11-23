@@ -2075,6 +2075,52 @@ class ApiService {
 
 ---
 
+# 🧠 Análisis
+
+## 40. Obtener Análisis Diario
+
+**Endpoint:** `GET /analisis/diario`
+
+**URL Completa:**
+```
+https://finsight-back.onrender.com/api/v1/analisis/diario
+```
+
+**Headers:**
+```
+Authorization: Bearer {access_token}
+```
+
+**Respuesta Exitosa (200) - Con datos:**
+```json
+{
+  "success": true,
+  "data": {
+    "id": 1,
+    "idUsuario": 1,
+    "fecha": "2025-11-23T00:00:00.000Z",
+    "resumen": "Resumen del análisis financiero...",
+    "insightAltoImpacto": "Gastaste un 20% más en comida.",
+    "insightMedioImpacto": "Tu ahorro se mantiene estable.",
+    "insightBajoImpacto": "Suscripción a Netflix pagada.",
+    "datosJson": { ... },
+    "createdAt": "2025-11-23T10:00:00.000Z"
+  },
+  "message": "Análisis encontrado"
+}
+```
+
+**Respuesta Exitosa (200) - Sin datos (Aún no generado hoy):**
+```json
+{
+  "success": true,
+  "data": null,
+  "message": "No hay análisis para el día de hoy"
+}
+```
+
+---
+
 # 📝 Notas Importantes
 
 ## Fechas
