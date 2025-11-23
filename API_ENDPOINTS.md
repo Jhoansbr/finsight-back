@@ -2101,8 +2101,11 @@ Authorization: Bearer {access_token}
     "fecha": "2025-11-23T00:00:00.000Z",
     "resumen": "Resumen del análisis financiero...",
     "insightAltoImpacto": "Gastaste un 20% más en comida.",
+    "nameInsightAlto": "Gasto Excesivo",
     "insightMedioImpacto": "Tu ahorro se mantiene estable.",
+    "nameInsightMedio": "Ahorro Estable",
     "insightBajoImpacto": "Suscripción a Netflix pagada.",
+    "nameInsightBajo": "Suscripción",
     "datosJson": { ... },
     "createdAt": "2025-11-23T10:00:00.000Z"
   },

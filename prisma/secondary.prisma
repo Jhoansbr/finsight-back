@@ -36,13 +36,16 @@ model AnalisisDiario {
 model ResultadosAnalisis {
   id                  Int       @id @default(autoincrement())
   idUsuario           Int       @map("id_usuario")
-  fecha               DateTime? @db.Date
+  fecha               DateTime  @db.Date
   resumen             String?   @db.Text
   insightAltoImpacto  String?   @map("insight_alto_impacto") @db.Text
   insightMedioImpacto String?   @map("insight_medio_impacto") @db.Text
   insightBajoImpacto  String?   @map("insight_bajo_impacto") @db.Text
   datosJson           Json?     @map("datos_json") @db.JsonB
   createdAt           DateTime? @default(now()) @map("created_at") @db.Timestamp(6)
+  nameInsightAlto     String?   @map("name_insight_alto") @db.Text
+  nameInsightMedio    String?   @map("name_insight_medio") @db.Text
+  nameInsightBajo     String?   @map("name_insight_bajo") @db.Text
 
   @@map("resultados_analisis")
 }
