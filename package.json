@@ -13,7 +13,8 @@
     "prisma:deploy": "prisma migrate deploy",
     "prisma:studio": "prisma studio",
     "prisma:seed": "node prisma/seed.js",
-    "postinstall": "prisma generate",
+    "prisma:generate:secondary": "prisma generate --schema=./prisma/secondary.prisma",
+    "postinstall": "prisma generate && npm run prisma:generate:secondary",
     "test": "cross-env NODE_ENV=test jest --detectOpenHandles --forceExit",
     "test:watch": "cross-env NODE_ENV=test jest --watch",
     "test:coverage": "cross-env NODE_ENV=test jest --coverage"
@@ -51,4 +52,3 @@
     "supertest": "^6.3.3"
   }
 }
-

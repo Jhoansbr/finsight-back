@@ -1180,7 +1180,17 @@ Content-Type: application/json
   "mes": 1,
   "anio": 2024,
   "montoTotal": 3000000,
-  "descripcion": "Presupuesto mensual"
+  "descripcion": "Presupuesto mensual",
+  "categorias": [
+    {
+      "categoriaId": 8,
+      "montoAsignado": 800000
+    },
+    {
+      "categoriaId": 9,
+      "montoAsignado": 500000
+    }
+  ]
 }
 ```
 
@@ -1197,7 +1207,35 @@ Content-Type: application/json
     "montoTotal": "3000000.00",
     "descripcion": "Presupuesto mensual",
     "activo": true,
-    "createdAt": "2024-01-01T10:00:00.000Z"
+    "createdAt": "2024-01-01T10:00:00.000Z",
+    "categorias": [
+      {
+        "id": 1,
+        "presupuestoId": 1,
+        "categoriaId": 8,
+        "montoAsignado": "800000.00",
+        "montoGastado": "0.00",
+        "categoria": {
+          "id": 8,
+          "nombre": "Alimentación",
+          "icono": "🍔",
+          "color": "#FF5252"
+        }
+      },
+      {
+        "id": 2,
+        "presupuestoId": 1,
+        "categoriaId": 9,
+        "montoAsignado": "500000.00",
+        "montoGastado": "0.00",
+        "categoria": {
+          "id": 9,
+          "nombre": "Transporte",
+          "icono": "🚗",
+          "color": "#448AFF"
+        }
+      }
+    ]
   }
 }
 ```
@@ -1293,7 +1331,8 @@ Content-Type: application/json
 ```json
 {
   "nombre": "Presupuesto Enero 2024 - Actualizado",
-  "montoTotal": 3500000
+  "montoTotal": 3500000,
+  "descripcion": "Ajuste por inflación"
 }
 ```
 

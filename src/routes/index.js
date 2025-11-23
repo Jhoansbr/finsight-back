@@ -6,6 +6,7 @@ import ingresoRoutes from './ingreso.routes.js';
 import gastoRoutes from './gasto.routes.js';
 import metaAhorroRoutes from './metaAhorro.routes.js';
 import presupuestoRoutes from './presupuesto.routes.js';
+import analisisRoutes from './analisis.routes.js';
 import recordatorioRoutes from './recordatorio.routes.js';
 import dashboardRoutes from './dashboard.routes.js';
 import testRoutes from './test.routes.js';
@@ -21,6 +22,7 @@ router.use('/ingresos', ingresoRoutes);
 router.use('/gastos', gastoRoutes);
 router.use('/metas-ahorros', metaAhorroRoutes);
 router.use('/presupuestos', presupuestoRoutes);
+router.use('/analisis', analisisRoutes);
 router.use('/recordatorios', recordatorioRoutes);
 router.use('/dashboard', dashboardRoutes);
 router.use('/', dashboardRoutes); // Para /estadisticas

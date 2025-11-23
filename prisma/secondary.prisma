@@ -1,0 +1,49 @@
+generator client {
+  provider = "prisma-client-js"
+  output   = "../node_modules/@prisma/secondary-client"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("SECONDARY_DATABASE_URL")
+}
+
+model UsuariosAnalisis {
+  idUsuario     Int       @id @map("id_usuario")
+  nombre        String    @db.VarChar(100)
+  email         String    @unique @db.VarChar(100)
+  fechaRegistro DateTime? @default(now()) @map("fecha_registro") @db.Timestamp(6)
+  activo        Boolean?  @default(true)
+
+  analisisDiarios AnalisisDiario[]
+
+  @@map("usuarios_analisis")
+}
+
+model AnalisisDiario {
+  id            Int       @id @default(autoincrement())
+  idUsuario     Int       @map("id_usuario")
+  fecha         DateTime  @db.Date
+  estado        String?   @db.VarChar(20)
+  resultado     String?   @db.Text
+  creadoEn      DateTime? @default(now()) @map("creado_en") @db.Timestamp(6)
+  actualizadoEn DateTime? @default(now()) @map("actualizado_en") @db.Timestamp(6)
+  errores       String[]
+  aviso         String[]
+
+  usuario UsuariosAnalisis @relation(fields: [idUsuario], references: [idUsuario], onDelete: Cascade)
+
+  @@map("analisis_diario")
+}
+
+model ResultadosAnalisis {
+  id              Int       @id @default(autoincrement())
+  idUsuario       Int       @map("id_usuario")
+  fecha           DateTime? @db.Date
+  sentimiento     String?   @db.VarChar(50)
+  resumen         String?   @db.Text
+  recomendaciones String?   @db.Text
+  generadoEn      DateTime? @default(now()) @map("generado_en") @db.Timestamp(6)
+
+  @@map("resultados_analisis")
+}
