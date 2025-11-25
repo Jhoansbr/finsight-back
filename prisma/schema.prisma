@@ -148,6 +148,7 @@ model MetaAhorro {
   montoActual    Decimal   @default(0) @map("monto_actual") @db.Decimal(15, 2)
   fechaInicio    DateTime? @map("fecha_inicio") @db.Date
   fechaObjetivo  DateTime? @map("fecha_objetivo") @db.Date
+  lugar          String?   @db.VarChar(100)
   activo         Boolean   @default(true)
   createdAt      DateTime  @default(now()) @map("created_at") @db.Timestamp(6)
   updatedAt      DateTime  @updatedAt @map("updated_at") @db.Timestamp(6)
@@ -170,7 +171,6 @@ model Ahorro {
   monto           Decimal  @db.Decimal(15, 2)
   fecha           DateTime @db.Date
   tipoMovimiento  String   @map("tipo_movimiento") @db.VarChar(20)
-  lugar           String?  @db.VarChar(100)
   descripcion     String?  @db.Text
   createdAt       DateTime @default(now()) @map("created_at") @db.Timestamp(6)
 

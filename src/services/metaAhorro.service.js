@@ -16,6 +16,7 @@ export const metaAhorroService = {
         fechaObjetivo: metaData.fechaObjetivo,
         fechaInicio: metaData.fechaInicio,
         fechaObjetivo: metaData.fechaObjetivo,
+        lugar: metaData.lugar,
       },
     });
 
@@ -123,6 +124,7 @@ export const metaAhorroService = {
         fechaObjetivo: metaData.fechaObjetivo,
         fechaInicio: metaData.fechaInicio,
         fechaObjetivo: metaData.fechaObjetivo,
+        lugar: metaData.lugar,
       },
     });
 
@@ -188,7 +190,6 @@ export const metaAhorroService = {
         nombre: movimientoData.nombre || (movimientoData.tipoMovimiento === 'deposito' ? 'Depósito a Meta' : 'Retiro de Meta'),
         tipoMovimiento: movimientoData.tipoMovimiento,
         monto: movimientoData.monto,
-        lugar: movimientoData.lugar,
         descripcion: movimientoData.descripcion,
         fecha: movimientoData.fecha || new Date(),
       },
