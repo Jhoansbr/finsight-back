@@ -14,8 +14,8 @@ export const metaAhorroService = {
         montoObjetivo: metaData.montoObjetivo,
         fechaInicio: metaData.fechaInicio,
         fechaObjetivo: metaData.fechaObjetivo,
-        prioridad: metaData.prioridad,
-        icono: metaData.icono,
+        fechaInicio: metaData.fechaInicio,
+        fechaObjetivo: metaData.fechaObjetivo,
       },
     });
 
@@ -26,31 +26,23 @@ export const metaAhorroService = {
    * Listar metas de ahorro del usuario
    */
   async getMetasAhorro(userId, filters = {}) {
-    const { page = 1, limit = 20, estado, prioridad } = filters;
-    
+    const { page = 1, limit = 20 } = filters;
+
     const skip = (page - 1) * limit;
     const where = {
       usuarioId: userId,
       activo: true,
     };
 
-    if (estado) {
-      where.estado = estado;
-    }
-
-    if (prioridad) {
-      where.prioridad = prioridad;
-    }
-
     const [metas, total] = await Promise.all([
       prisma.metaAhorro.findMany({
         where,
         orderBy: [
-          { estado: 'asc' },
-          { fechaObjetivo: 'asc' },
-        ],
-        skip,
-        take: parseInt(limit),
+          orderBy: [
+            { fechaObjetivo: 'asc' },
+          ],
+          skip,
+          take: parseInt(limit),
       }),
       prisma.metaAhorro.count({ where }),
     ]);
@@ -58,7 +50,7 @@ export const metaAhorroService = {
     // Calcular progreso para cada meta
     const metasConProgreso = metas.map(meta => ({
       ...meta,
-      progreso: meta.montoObjetivo > 0 
+      progreso: meta.montoObjetivo > 0
         ? ((parseFloat(meta.montoActual) / parseFloat(meta.montoObjetivo)) * 100).toFixed(2)
         : 0,
     }));
@@ -94,7 +86,7 @@ export const metaAhorroService = {
     }
 
     // Calcular progreso
-    const progreso = meta.montoObjetivo > 0 
+    const progreso = meta.montoObjetivo > 0
       ? ((parseFloat(meta.montoActual) / parseFloat(meta.montoObjetivo)) * 100).toFixed(2)
       : 0;
 
@@ -130,9 +122,8 @@ export const metaAhorroService = {
         montoObjetivo: metaData.montoObjetivo,
         fechaInicio: metaData.fechaInicio,
         fechaObjetivo: metaData.fechaObjetivo,
-        estado: metaData.estado,
-        prioridad: metaData.prioridad,
-        icono: metaData.icono,
+        fechaInicio: metaData.fechaInicio,
+        fechaObjetivo: metaData.fechaObjetivo,
       },
     });
 
@@ -211,8 +202,8 @@ export const metaAhorroService = {
       montoActual: nuevoMontoActual,
     };
 
-    if (nuevoMontoActual >= parseFloat(meta.montoObjetivo) && meta.estado === 'en_progreso') {
-      updateData.estado = 'completada';
+    if (nuevoMontoActual >= parseFloat(meta.montoObjetivo)) {
+      // Meta completada (lógica implícita, ya que no hay campo estado)
     }
 
     await prisma.metaAhorro.update({

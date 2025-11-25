@@ -910,15 +910,9 @@ Content-Type: application/json
   "descripcion": "Viaje a Cartagena",
   "montoObjetivo": 5000000,
   "fechaInicio": "2024-01-01",
-  "fechaObjetivo": "2024-12-01",
-  "prioridad": "alta",
-  "icono": "✈️"
+  "fechaObjetivo": "2024-12-01"
 }
 ```
-
-**Campos:**
-- `prioridad`: `baja`, `media`, `alta`
-- `estado`: `en_progreso` (default), `completada`, `cancelada`
 
 **Respuesta Exitosa (201):**
 ```json
