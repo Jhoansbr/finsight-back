@@ -29,7 +29,6 @@ export const createMetaAhorroValidator = [
     .withMessage('Fecha objetivo inválida')
     .toDate(),
 
-
 ];
 
 export const updateMetaAhorroValidator = [
@@ -63,7 +62,6 @@ export const updateMetaAhorroValidator = [
     .isISO8601()
     .withMessage('Fecha objetivo inválida')
     .toDate(),
-
 
 ];
 
@@ -99,7 +97,6 @@ export const listMetasAhorroValidator = [
     .optional()
     .isInt({ min: 1, max: 100 })
     .withMessage('Límite debe estar entre 1 y 100'),
-
 
 ];
 
