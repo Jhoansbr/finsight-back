@@ -183,7 +183,9 @@ export const metaAhorroService = {
     // Crear movimiento
     const ahorro = await prisma.ahorro.create({
       data: {
-        metaId,
+        metaAhorroId: parseInt(metaId),
+        usuarioId: userId,
+        nombre: movimientoData.nombre || (movimientoData.tipoMovimiento === 'deposito' ? 'Depósito a Meta' : 'Retiro de Meta'),
         tipoMovimiento: movimientoData.tipoMovimiento,
         monto: movimientoData.monto,
         descripcion: movimientoData.descripcion,

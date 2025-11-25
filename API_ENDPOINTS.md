@@ -1070,6 +1070,7 @@ Content-Type: application/json
 ```json
 {
   "tipoMovimiento": "deposito",
+  "nombre": "Ahorro Enero",
   "monto": 500000,
   "descripcion": "Ahorro de enero",
   "fecha": "2024-01-15"
@@ -1080,6 +1081,7 @@ Content-Type: application/json
 ```json
 {
   "tipoMovimiento": "retiro",
+  "nombre": "Retiro Emergencia",
   "monto": 200000,
   "descripcion": "Emergencia médica"
 }

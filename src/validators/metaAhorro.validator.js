@@ -70,6 +70,14 @@ export const createMovimientoValidator = [
     .isIn(['deposito', 'retiro'])
     .withMessage('Tipo de movimiento debe ser: deposito o retiro'),
 
+  body('nombre')
+    .optional()
+    .trim()
+    .notEmpty()
+    .withMessage('El nombre es requerido')
+    .isLength({ max: 200 })
+    .withMessage('El nombre no debe exceder 200 caracteres'),
+
   body('monto')
     .isFloat({ min: 0.01 })
     .withMessage('El monto debe ser un número positivo'),
