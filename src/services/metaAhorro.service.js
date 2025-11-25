@@ -38,11 +38,10 @@ export const metaAhorroService = {
       prisma.metaAhorro.findMany({
         where,
         orderBy: [
-          orderBy: [
-            { fechaObjetivo: 'asc' },
-          ],
-          skip,
-          take: parseInt(limit),
+          { fechaObjetivo: 'asc' },
+        ],
+        skip,
+        take: parseInt(limit),
       }),
       prisma.metaAhorro.count({ where }),
     ]);
