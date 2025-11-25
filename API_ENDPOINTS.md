@@ -1072,6 +1072,7 @@ Content-Type: application/json
   "tipoMovimiento": "deposito",
   "nombre": "Ahorro Enero",
   "monto": 500000,
+  "lugar": "Alcancía",
   "descripcion": "Ahorro de enero",
   "fecha": "2024-01-15"
 }
@@ -1083,6 +1084,7 @@ Content-Type: application/json
   "tipoMovimiento": "retiro",
   "nombre": "Retiro Emergencia",
   "monto": 200000,
+  "lugar": "Cuenta Bancaria",
   "descripcion": "Emergencia médica"
 }
 ```

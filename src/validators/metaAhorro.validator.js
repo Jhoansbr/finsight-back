@@ -82,6 +82,12 @@ export const createMovimientoValidator = [
     .isFloat({ min: 0.01 })
     .withMessage('El monto debe ser un número positivo'),
 
+  body('lugar')
+    .optional()
+    .trim()
+    .isLength({ max: 100 })
+    .withMessage('El lugar no debe exceder 100 caracteres'),
+
   body('descripcion')
     .optional()
     .trim()
