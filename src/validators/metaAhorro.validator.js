@@ -23,10 +23,13 @@ export const createMetaAhorroValidator = [
     .withMessage('Fecha de inicio inválida')
     .toDate(),
 
+  body('fechaObjetivo')
     .optional()
     .isISO8601()
     .withMessage('Fecha objetivo inválida')
     .toDate(),
+
+
 
   body('lugar')
     .optional()
