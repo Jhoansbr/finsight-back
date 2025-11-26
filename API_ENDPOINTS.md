@@ -240,34 +240,6 @@ Authorization: Bearer {access_token}
   }
 }
 ```
-
----
-
-# 👤 Usuarios
-
-## 6. Actualizar Perfil
-
-**Endpoint:** `PUT /users/profile`
-
-**URL Completa:**
-```
-https://finsight-back.onrender.com/api/v1/users/profile
-```
-
-**Headers:**
-```
-Authorization: Bearer {access_token}
-Content-Type: application/json
-```
-
-**Body:**
-```json
-{
-  "nombre": "Juan Carlos",
-  "apellido": "Pérez García",
-  "telefono": "3009876543",
-  "fechaNacimiento": "1990-01-15"
-}
 ```
 
 **Respuesta Exitosa (200):**

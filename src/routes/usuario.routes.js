@@ -23,12 +23,13 @@ router.use(authenticate);
  *             properties:
  *               nombre:
  *                 type: string
- *               apellido:
+ *               apodo:
  *                 type: string
- *               fechaNacimiento:
+ *               fotoPerfil:
  *                 type: string
- *                 format: date
- *               telefono:
+ *               telegram:
+ *                 type: string
+ *               whatsapp:
  *                 type: string
  *     responses:
  *       200:
@@ -49,6 +50,8 @@ router.put('/profile', updateProfileValidator, validate, usuarioController.updat
  *             type: object
  *             properties:
  *               moneda:
+ *                 type: string
+ *               pais:
  *                 type: string
  *               zonaHoraria:
  *                 type: string

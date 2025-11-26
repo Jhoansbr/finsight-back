@@ -11,20 +11,19 @@ export const usuarioService = {
       where: { id: userId },
       data: {
         nombre: profileData.nombre,
-        apellido: profileData.apellido,
-        fechaNacimiento: profileData.fechaNacimiento,
-        telefono: profileData.telefono,
+        apodo: profileData.apodo,
+        fotoPerfil: profileData.fotoPerfil,
+        telegram: profileData.telegram,
+        whatsapp: profileData.whatsapp,
       },
       select: {
         id: true,
         email: true,
         nombre: true,
-        apellido: true,
-        fechaNacimiento: true,
-        telefono: true,
-        moneda: true,
-        zonaHoraria: true,
-        idioma: true,
+        apodo: true,
+        fotoPerfil: true,
+        telegram: true,
+        whatsapp: true,
         updatedAt: true,
       },
     });
@@ -36,18 +35,29 @@ export const usuarioService = {
    * Actualizar preferencias de usuario
    */
   async updatePreferences(userId, preferencesData) {
-    const user = await prisma.usuario.update({
-      where: { id: userId },
-      data: {
+    const preferencia = await prisma.preferenciaUsuario.upsert({
+      where: { usuarioId: userId },
+      update: {
         moneda: preferencesData.moneda,
+        pais: preferencesData.pais,
         zonaHoraria: preferencesData.zonaHoraria,
         idioma: preferencesData.idioma,
         notificacionesEmail: preferencesData.notificacionesEmail,
         notificacionesPush: preferencesData.notificacionesPush,
       },
+      create: {
+        usuarioId: userId,
+        moneda: preferencesData.moneda || 'COP',
+        pais: preferencesData.pais,
+        zonaHoraria: preferencesData.zonaHoraria || 'America/Bogota',
+        idioma: preferencesData.idioma || 'es',
+        notificacionesEmail: preferencesData.notificacionesEmail ?? true,
+        notificacionesPush: preferencesData.notificacionesPush ?? true,
+      },
       select: {
         id: true,
         moneda: true,
+        pais: true,
         zonaHoraria: true,
         idioma: true,
         notificacionesEmail: true,
@@ -56,7 +66,7 @@ export const usuarioService = {
       },
     });
 
-    return user;
+    return preferencia;
   },
 
   /**
