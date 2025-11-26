@@ -1,8 +1,10 @@
 import { Router } from 'express';
 import { usuarioController } from '../controllers/usuario.controller.js';
+import { uploadController } from '../controllers/upload.controller.js';
 import { updateProfileValidator, updatePreferencesValidator, changePasswordValidator } from '../validators/usuario.validator.js';
 import { validate } from '../middleware/validation.js';
 import { authenticate } from '../middleware/auth.js';
+import { upload } from '../middleware/upload.js';
 
 const router = Router();
 
@@ -35,6 +37,27 @@ router.use(authenticate);
  *       200:
  *         description: Perfil actualizado exitosamente
  */
+/**
+ * @swagger
+ * /users/upload-photo:
+ *   post:
+ *     summary: Subir foto de perfil
+ *     tags: [Usuarios]
+ *     requestBody:
+ *       content:
+ *         multipart/form-data:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               photo:
+ *                 type: string
+ *                 format: binary
+ *     responses:
+ *       200:
+ *         description: Foto subida exitosamente
+ */
+router.post('/upload-photo', upload.single('photo'), uploadController.uploadProfilePhoto);
+
 router.put('/profile', updateProfileValidator, validate, usuarioController.updateProfile);
 
 /**
