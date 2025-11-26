@@ -38,65 +38,6 @@ https://finsight-back.onrender.com/api/v1/auth/register
 Content-Type: application/json
 ```
 
-**Body:**
-```json
-{
-  "email": "usuario@example.com",
-  "password": "Password123",
-  "nombre": "Juan",
-  "apellido": "Pérez",
-  "telefono": "3001234567",
-  "fechaNacimiento": "1990-01-15"
-}
-```
-
-**Campos Requeridos:**
-- ✅ `email` (string, email válido)
-- ✅ `password` (string, mínimo 8 caracteres, debe contener mayúscula, minúscula y número)
-- ✅ `nombre` (string, máximo 100 caracteres)
-- ✅ `apellido` (string, máximo 100 caracteres)
-
-**Campos Opcionales:**
-- `telefono` (string)
-- `fechaNacimiento` (string, formato ISO: YYYY-MM-DD)
-
-**Respuesta Exitosa (201):**
-```json
-{
-  "success": true,
-  "data": {
-    "user": {
-      "id": 1,
-      "email": "usuario@example.com",
-      "nombre": "Juan",
-      "apellido": "Pérez",
-      "telefono": "3001234567",
-      "moneda": "COP",
-      "zonaHoraria": "America/Bogota",
-      "idioma": "es",
-      "createdAt": "2024-01-20T10:00:00.000Z"
-    },
-    "accessToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
-    "refreshToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
-  }
-}
-```
-
-**Ejemplo Flutter:**
-```dart
-final response = await dio.post(
-  '/auth/register',
-  data: {
-    'email': 'usuario@example.com',
-    'password': 'Password123',
-    'nombre': 'Juan',
-    'apellido': 'Pérez',
-  },
-);
-```
-
----
-
 ## 2. Iniciar Sesión
 
 **Endpoint:** `POST /auth/login`

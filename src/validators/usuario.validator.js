@@ -17,8 +17,7 @@ export const updateProfileValidator = [
 
   body('fotoPerfil')
     .optional()
-    .trim()
-    .withMessage('Foto de perfil inválida'),
+    .trim(),
 
   body('telegram')
     .optional()
