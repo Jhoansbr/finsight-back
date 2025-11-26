@@ -69,5 +69,33 @@ export const authController = {
       next(error);
     }
   },
-};
 
+  /**
+   * Solicitar recuperación de contraseña
+   * POST /api/v1/auth/forgot-password
+   */
+  async forgotPassword(req, res, next) {
+    try {
+      const { email } = req.body;
+      await authService.forgotPassword(email);
+      // Siempre respondemos éxito por seguridad
+      res.json(successResponse({ message: 'Si el correo existe, recibirás instrucciones para recuperar tu contraseña' }));
+    } catch (error) {
+      next(error);
+    }
+  },
+
+  /**
+   * Restablecer contraseña
+   * POST /api/v1/auth/reset-password
+   */
+  async resetPassword(req, res, next) {
+    try {
+      const { token, newPassword } = req.body;
+      const result = await authService.resetPassword(token, newPassword);
+      res.json(successResponse(result));
+    } catch (error) {
+      next(error);
+    }
+  },
+};

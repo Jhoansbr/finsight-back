@@ -2,6 +2,8 @@ import prisma from '../config/database.js';
 import { hashPassword, comparePassword } from '../utils/bcrypt.js';
 import { generateTokens, verifyRefreshToken } from '../config/jwt.js';
 import { ConflictError, AuthenticationError, NotFoundError } from '../utils/errors.js';
+import { emailService } from './email.service.js';
+import jwt from 'jsonwebtoken';
 
 export const authService = {
   /**
@@ -165,6 +167,58 @@ export const authService = {
     }
 
     return user;
+  },
+
+  /**
+   * Solicitar recuperación de contraseña
+   */
+  async forgotPassword(email) {
+    const user = await prisma.usuario.findUnique({
+      where: { email },
+    });
+
+    if (!user) {
+      // Por seguridad, no decimos si el usuario existe o no
+      return;
+    }
+
+    // Generar token de recuperación (validez 1 hora)
+    // Usamos la misma función de JWT pero con un secret diferente o payload específico
+    const resetToken = jwt.sign(
+      { id: user.id, type: 'reset' },
+      process.env.JWT_SECRET,
+      { expiresIn: '1h' }
+    );
+
+    // Enviar correo
+    await emailService.sendPasswordResetEmail(email, resetToken);
+  },
+
+  /**
+   * Restablecer contraseña
+   */
+  async resetPassword(token, newPassword) {
+    try {
+      // Verificar token
+      const decoded = jwt.verify(token, process.env.JWT_SECRET);
+
+      if (decoded.type !== 'reset') {
+        throw new AuthenticationError('Token inválido');
+      }
+
+      // Hash nueva contraseña
+      const passwordHash = await hashPassword(newPassword);
+
+      // Actualizar usuario
+      await prisma.usuario.update({
+        where: { id: decoded.id },
+        data: { passwordHash },
+      });
+
+      return { message: 'Contraseña actualizada exitosamente' };
+    } catch (error) {
+      throw new AuthenticationError('Token inválido o expirado');
+    }
   },
 };
 
