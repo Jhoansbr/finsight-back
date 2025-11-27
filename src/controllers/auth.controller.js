@@ -71,28 +71,27 @@ export const authController = {
   },
 
   /**
-   * Solicitar recuperación de contraseña
+   * Verificar correo
    * POST /api/v1/auth/forgot-password
    */
   async forgotPassword(req, res, next) {
     try {
       const { email } = req.body;
-      await authService.forgotPassword(email);
-      // Siempre respondemos éxito por seguridad
-      res.json(successResponse({ message: 'Si el correo existe, recibirás instrucciones para recuperar tu contraseña' }));
+      const result = await authService.forgotPassword(email);
+      res.json(successResponse(result));
     } catch (error) {
       next(error);
     }
   },
 
   /**
-   * Restablecer contraseña
+   * Restablecer contraseña directamente
    * POST /api/v1/auth/reset-password
    */
   async resetPassword(req, res, next) {
     try {
-      const { token, newPassword } = req.body;
-      const result = await authService.resetPassword(token, newPassword);
+      const { email, newPassword } = req.body;
+      const result = await authService.resetPassword(email, newPassword);
       res.json(successResponse(result));
     } catch (error) {
       next(error);

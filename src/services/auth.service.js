@@ -170,62 +170,43 @@ export const authService = {
   },
 
   /**
-   * Solicitar recuperación de contraseña
+   * Verificar si el correo existe (Paso 1)
    */
   async forgotPassword(email) {
-    console.log('🔍 [DEBUG] forgotPassword solicitado para:', email);
-
     const user = await prisma.usuario.findUnique({
       where: { email },
     });
 
     if (!user) {
-      console.log('❌ [DEBUG] Usuario no encontrado:', email);
-      // Por seguridad, no decimos si el usuario existe o no
-      return;
+      throw new NotFoundError('No existe un usuario con este correo');
     }
 
-    console.log('✅ [DEBUG] Usuario encontrado, generando token...');
-
-    // Generar token de recuperación (validez 1 hora)
-    // Usamos la misma función de JWT pero con un secret diferente o payload específico
-    const resetToken = jwt.sign(
-      { id: user.id, type: 'reset' },
-      process.env.JWT_SECRET,
-      { expiresIn: '1h' }
-    );
-
-    console.log('📧 [DEBUG] Enviando correo...');
-    // Enviar correo
-    await emailService.sendPasswordResetEmail(email, resetToken);
-    console.log('🚀 [DEBUG] Correo enviado (supuestamente)');
+    return { message: 'Usuario encontrado' };
   },
 
   /**
-   * Restablecer contraseña
+   * Restablecer contraseña directamente (Paso 2)
+   * ⚠️ INSEGURO: Permite cambiar contraseña solo con el email
    */
-  async resetPassword(token, newPassword) {
-    try {
-      // Verificar token
-      const decoded = jwt.verify(token, process.env.JWT_SECRET);
+  async resetPassword(email, newPassword) {
+    const user = await prisma.usuario.findUnique({
+      where: { email },
+    });
 
-      if (decoded.type !== 'reset') {
-        throw new AuthenticationError('Token inválido');
-      }
-
-      // Hash nueva contraseña
-      const passwordHash = await hashPassword(newPassword);
-
-      // Actualizar usuario
-      await prisma.usuario.update({
-        where: { id: decoded.id },
-        data: { passwordHash },
-      });
-
-      return { message: 'Contraseña actualizada exitosamente' };
-    } catch (error) {
-      throw new AuthenticationError('Token inválido o expirado');
+    if (!user) {
+      throw new NotFoundError('Usuario no encontrado');
     }
+
+    // Hash nueva contraseña
+    const passwordHash = await hashPassword(newPassword);
+
+    // Actualizar usuario
+    await prisma.usuario.update({
+      where: { id: user.id },
+      data: { passwordHash },
+    });
+
+    return { message: 'Contraseña actualizada exitosamente' };
   },
 };
 

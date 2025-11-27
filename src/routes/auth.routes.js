@@ -127,7 +127,7 @@ router.post('/logout', authenticate, authController.logout);
  * @swagger
  * /auth/forgot-password:
  *   post:
- *     summary: Solicitar recuperación de contraseña
+ *     summary: Verificar si el correo existe
  *     tags: [Auth]
  *     requestBody:
  *       required: true
@@ -143,7 +143,9 @@ router.post('/logout', authenticate, authController.logout);
  *                 format: email
  *     responses:
  *       200:
- *         description: Correo de recuperación enviado
+ *         description: Usuario encontrado
+ *       404:
+ *         description: Usuario no encontrado
  */
 router.post('/forgot-password', authController.forgotPassword);
 
@@ -151,7 +153,7 @@ router.post('/forgot-password', authController.forgotPassword);
  * @swagger
  * /auth/reset-password:
  *   post:
- *     summary: Restablecer contraseña con token
+ *     summary: Restablecer contraseña directamente (Inseguro)
  *     tags: [Auth]
  *     requestBody:
  *       required: true
@@ -160,11 +162,12 @@ router.post('/forgot-password', authController.forgotPassword);
  *           schema:
  *             type: object
  *             required:
- *               - token
+ *               - email
  *               - newPassword
  *             properties:
- *               token:
+ *               email:
  *                 type: string
+ *                 format: email
  *               newPassword:
  *                 type: string
  *                 minLength: 8
