@@ -1,19 +1,19 @@
 import { transporter } from '../config/email.js';
 
 export const emailService = {
-    /**
-     * Enviar correo de recuperación de contraseña
-     */
-    async sendPasswordResetEmail(email, token) {
-        // En producción, esto debería ser la URL de tu frontend
-        // Por ahora, usaremos un link genérico o deep link si es app móvil
-        const resetLink = `https://finsight-app.com/reset-password?token=${token}`;
+  /**
+   * Enviar correo de recuperación de contraseña
+   */
+  async sendPasswordResetEmail(email, token) {
+    // En producción, esto debería ser la URL de tu frontend
+    // Por ahora, usaremos un link genérico o deep link si es app móvil
+    const resetLink = `https://finsight-app.com/reset-password?token=${token}`;
 
-        const mailOptions = {
-            from: '"Finsight Soporte" <process.env.EMAIL_USER>',
-            to: email,
-            subject: 'Recuperación de Contraseña - Finsight',
-            html: `
+    const mailOptions = {
+      from: `"Finsight Soporte" <${process.env.EMAIL_USER}>`,
+      to: email,
+      subject: 'Recuperación de Contraseña - Finsight',
+      html: `
         <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
           <h2 style="color: #2c3e50;">Recuperación de Contraseña</h2>
           <p>Hola,</p>
@@ -30,8 +30,8 @@ export const emailService = {
           <p style="font-size: 12px; color: #7f8c8d;">Este es un correo automático, por favor no respondas.</p>
         </div>
       `,
-        };
+    };
 
-        await transporter.sendMail(mailOptions);
-    },
+    await transporter.sendMail(mailOptions);
+  },
 };
