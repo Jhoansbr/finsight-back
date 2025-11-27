@@ -173,14 +173,19 @@ export const authService = {
    * Solicitar recuperación de contraseña
    */
   async forgotPassword(email) {
+    console.log('🔍 [DEBUG] forgotPassword solicitado para:', email);
+
     const user = await prisma.usuario.findUnique({
       where: { email },
     });
 
     if (!user) {
+      console.log('❌ [DEBUG] Usuario no encontrado:', email);
       // Por seguridad, no decimos si el usuario existe o no
       return;
     }
+
+    console.log('✅ [DEBUG] Usuario encontrado, generando token...');
 
     // Generar token de recuperación (validez 1 hora)
     // Usamos la misma función de JWT pero con un secret diferente o payload específico
@@ -190,8 +195,10 @@ export const authService = {
       { expiresIn: '1h' }
     );
 
+    console.log('📧 [DEBUG] Enviando correo...');
     // Enviar correo
     await emailService.sendPasswordResetEmail(email, resetToken);
+    console.log('🚀 [DEBUG] Correo enviado (supuestamente)');
   },
 
   /**
